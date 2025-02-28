@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Results - GLOBAL SPOKEN ENGLISH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+      to {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 2s;
+    }
+
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      width: 200px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .certificate {
+      display: none;
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      color: #000;
+      padding: 2rem;
+      border-radius: 15px;
+      border: 15px solid transparent;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      animation: slideIn 1s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .certificate::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .certificate::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      background: url('https://www.transparenttextures.com/patterns/old-map.png');
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .certificate h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #8B4513;
+    }
+
+    .certificate p {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .student-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.5rem;
+      color: #1e3c72;
+      margin: 1rem 0;
+    }
+
+    .sliding-text-container {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .sliding-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: slide 10s linear infinite;
+      font-size: 1.2rem;
+      color: #8B4513;
+    }
+
+    @keyframes slide {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    .download-btn {
+      margin-top: 1rem;
+      background: #008CBA;
+    }
+
+    .download-btn:hover {
+      background: #007B9E;
+    }
+
+    .theme-selector {
+      margin-top: 1rem;
+    }
+
+    .theme-selector button {
+      margin: 0.2rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Theme Colors */
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GLOBAL SPOKEN ENGLISH</h1>
+    <input type="text" id="studentId" placeholder="Enter Student ID">
+    <button onclick="displayResult()">View Result</button>
+
+
+    <div id="certificate" class="certificate theme-1">
+      <div class="sliding-text-container">
+        <div id="slidingText" class="sliding-text"></div>
+      </div>
+      <h2>Certificate of Achievement</h2>
+      <p>This is to certify that</p>
+      <p id="studentName" class="student-name">[Student Name]</p>
+      <p>has successfully completed the test with the following result:</p>
+      <p id="result">[Result]</p>
+      <button class="download-btn" onclick="downloadCertificate()">Download as JPG</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    // Sample data for demonstration
+    const students = {
+      "123": { name: "John Doe", result: "95%" },
+      "456": { name: "Jane Smith", result: "88%" },
+      "789": { name: "Alice Johnson", result: "92%" },
+      "ABC101": { name: "Rahul Sharma", result: "85%" }, // Example of string ID
+      "XYZ202": { name: "Priya Patel", result: "90%" }
+    };
+
+    function displayResult() {
+      const studentId = document.getElementById('studentId').value;
+      const certificate = document.getElementById('certificate');
+      const studentName = document.getElementById('studentName');
+      const result = document.getElementById('result');
+      const slidingText = document.getElementById('slidingText');
+
+      if (students[studentId]) {
+        studentName.textContent = students[studentId].name;
+        result.textContent = students[studentId].result;
+        slidingText.textContent = `Congrats ${students[studentId].name} with ${students[studentId].result}`;
+        certificate.style.display = 'block';
+      } else {
+        alert('Student ID not found. Please try again.');
+      }
+    }
+
+   
+
+    function downloadCertificate() {
+      const element = document.getElementById('certificate');
+      html2canvas(element).then((canvas) => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/jpeg');
+        link.download = 'certificate.jpg';
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
