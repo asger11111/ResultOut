@@ -14,6 +14,7 @@
       align-items: center;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
     }
     .container {
       text-align: center;
@@ -21,6 +22,7 @@
       padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      position: relative;
     }
     h1 {
       font-size: 2.5rem;
@@ -95,19 +97,75 @@
       color: #555;
       margin-top: 1rem;
     }
+    /* Boomer Bomb Effect */
+    .boomer-bomb {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #ff0, #f00);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      animation: boomerBomb 1.5s ease-out;
+    }
+    @keyframes boomerBomb {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+      }
+    }
+    /* Flashing Effect */
+    .flash {
+      animation: flash 1s infinite;
+    }
+    @keyframes flash {
+      0%, 100% {
+        background-color: transparent;
+      }
+      50% {
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+    }
+    /* Confetti Effect */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff0;
+      animation: confetti 2s linear infinite;
+    }
+    @keyframes confetti {
+      0% {
+        transform: translateY(0) rotate(0);
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>GLOBAL SPOKEN ENGLISH</h1>
     <input type="text" id="studentId" placeholder="Enter Student ID">
     <button onclick="displayResult()">View Result</button>
+    <button onclick="exportToExcel()">Download Data as Excel</button>
     <div id="certificate" class="certificate">
       <h2>Certificate of Achievement</h2>
       <p>This is to certify that</p>
       <p id="studentName" class="student-name"></p>
-      <p>your son has successfully completed the weekly test with the following result:</p>
+      <p>your son has successfully completed the test with the following result:</p>
       <p id="result" class="highlight"></p>
       <p id="rank"></p>
       <p id="topper" class="topper"></p>
@@ -187,8 +245,27 @@
         // Check if the current student is the topper
         if (studentId === topperId) {
           topper.textContent = "Topper";
+          // Add boomer bomb effect
+          const boomerBomb = document.createElement('div');
+          boomerBomb.className = 'boomer-bomb';
+          document.body.appendChild(boomerBomb);
+          setTimeout(() => boomerBomb.remove(), 1500);
+
+          // Add flashing effect
+          document.body.classList.add('flash');
+
+          // Add confetti effect
+          for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = `${Math.random() * 100}vw`;
+            confetti.style.animationDelay = `${Math.random()}s`;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 2000);
+          }
         } else {
           topper.textContent = "";
+          document.body.classList.remove('flash');
         }
       } else {
         alert('Student ID not found. Please try again.');
@@ -204,6 +281,8 @@
         link.click();
       });
     }
+
+    
   </script>
 </body>
 </html>
