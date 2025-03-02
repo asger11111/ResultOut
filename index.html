@@ -40,6 +40,7 @@
       background: #4CAF50;
       color: white;
       cursor: pointer;
+      margin: 0.5rem;
     }
     button:hover {
       background: #45a049;
@@ -52,8 +53,50 @@
       padding: 2rem;
       border-radius: 15px;
       text-align: center;
+      position: relative;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      border: 2px solid #ddd;
+    }
+    .certificate::before {
+      content: "Global Spoken English";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 3rem;
+      color: rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+    .highlight {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+    .topper {
+      color: red;
+      font-weight: bold;
+      animation: openGift 2s ease-in-out;
+    }
+    @keyframes openGift {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .timestamp {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 1rem;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -64,51 +107,102 @@
       <h2>Certificate of Achievement</h2>
       <p>This is to certify that</p>
       <p id="studentName" class="student-name"></p>
-      <p>your son has successfully completed the test with the following result:</p>
-      <p id="result"></p>
+      <p>your son has successfully completed the weekly test with the following result:</p>
+      <p id="result" class="highlight"></p>
+      <p id="rank"></p>
+      <p id="topper" class="topper"></p>
+      <p id="timestamp" class="timestamp"></p>
     </div>
+    <button id="downloadBtn" style="display: none;" onclick="downloadCertificate()">Download Certificate</button>
   </div>
   <script>
     const students = {
-      "S-Ramzan-11": { name: "Gulam Rasool Rizvi", result: "1" },
-      "S-Ramzan-16": { name: "Abdul Latif", result: "2" },
-      "S-Ramzan-34": { name: "Lal Mohammad", result: "3" },
-      "S-Ramzan-38": { name: "Rafeeq Ahmad", result: "4" },
-      "S-Ramzan-47": { name: "Sayed Kamal Ahmad", result: "5" },
-      "S-Ramzan-42": { name: "Munshiraza", result: "6" },
-      "S-Ramzan-12": { name: "Ekhlak Ahmad", result: "8" },
-      "S-Ramzan-32": { name: "Nijamuddin", result: "9" },
-      "S-Ramzan-19": { name: "Navi Jaan", result: "10" },
-      "S-Ramzan-19": { name: "Habibullah", result: "11" },
-      "S-Ramzan-13": { name: "Imteyaz Ahmad", result: "12" },
-      "S-Ramzan-35": { name: "Naimuddin Ansari", result: "13" },
-      "S-Ramzan-05": { name: "Ghulam Rabbani Khan", result: "14" },
-      "S-Ramzan-23": { name: "Akhatar Ansari", result: "15" },
-      "S-Ramzan-41": { name: "Yunus", result: "16" },
-      "S-Ramzan-14": { name: "Faiz Alam", result: "147" },
-      "S-Ramzan-03": { name: "Saiyad Ahmad", result: "18" },
-      "S-Ramzan-36": { name: "Zulkanain", result: "19" },
-      "S-Ramzan-08": { name: "Abdul Nadir", result: "20" },
-      "S-Ramzan-39": { name: "Azizul Shekh", result: "21" },
-      "S-Ramzan-43": { name: "Savid Ali", result: "22" },
-      "S-Ramzan-15": { name: "Shaarfuddin Ansari", result: "23" },
-      "S-Ramzan-09": { name: "Mohd. Muslim Raini", result: "24" },
-      "S-Ramzan-18": { name: "Farid Alam", result: "25" },
-      "S-Ramzan-29": { name: "Md. Mushtak Ahmed", result: "26" },
-      "S-Ramzan-44": { name: "Mainudin Julaha", result: "27" }
+      "S-Ramzan-11": { name: "Gulam Rasool Rizvi", marks: 97 },
+      "S-Ramzan-16": { name: "Abdul Latif", marks: 90 },
+      "S-Ramzan-34": { name: "Lal Mohammad", marks: 48 },
+      "S-Ramzan-38": { name: "Rafeeq Ahmad", marks: 75 },
+      "S-Ramzan-47": { name: "Sayed Kamal Ahmad", marks: -1 },
+      "S-Ramzan-42": { name: "Munshiraza", marks: -1 },
+      "S-Ramzan-12": { name: "Ekhlak Ahmad", marks: 79 },
+      "S-Ramzan-32": { name: "Nijamuddin", marks: 83 },
+      "S-Ramzan-19": { name: "Navi Jaan", marks: 99.5 },
+      "S-Ramzan-19": { name: "Habibullah", marks: 59 },
+      "S-Ramzan-13": { name: "Imteyaz Ahmad", marks: 66.5 },
+      "S-Ramzan-35": { name: "Naimuddin Ansari", marks: 85 },
+      "S-Ramzan-05": { name: "Ghulam Rabbani Khan", marks: 34 },
+      "S-Ramzan-23": { name: "Akhatar Ansari", marks: -1 },
+      "S-Ramzan-41": { name: "Yunus", marks: 32 },
+      "S-Ramzan-14": { name: "Faiz Alam", marks: 100 },
+      "S-Ramzan-03": { name: "Saiyad Ahmad", marks: 82 },
+      "S-Ramzan-36": { name: "Zulkanain", marks: -1 },
+      "S-Ramzan-08": { name: "Abdul Nadir", marks: 97.5 },
+      "S-Ramzan-39": { name: "Azizul Shekh", marks: 73.5 },
+      "S-Ramzan-43": { name: "Savid Ali", marks: -1 },
+      "S-Ramzan-15": { name: "Shaarfuddin Ansari", marks: 48.5 },
+      "S-Ramzan-09": { name: "Mohd. Muslim Raini", marks: 61.5 },
+      "S-Ramzan-18": { name: "Farid Alam", marks: 92.5 },
+      "S-Ramzan-29": { name: "Md. Mushtak Ahmed", marks: -1 },
+      "S-Ramzan-44": { name: "Mainudin Julaha", marks: -1 },
+      "S-Ramzan-23": { name: "Mohd shahbaz*", marks: 48.6 },
+      "R-23": { name: "akhtar ansari", marks: 80.5 },
+      "S-Ramzan-17": { name: "Majibullah*", marks: 59 }
     };
+
+    // Calculate ranks
+    const studentEntries = Object.entries(students);
+    const validStudents = studentEntries.filter(([id, data]) => data.marks !== -1);
+    validStudents.sort((a, b) => b[1].marks - a[1].marks);
+    validStudents.forEach(([id, data], index) => {
+      students[id].rank = index + 1;
+    });
+
     function displayResult() {
       const studentId = document.getElementById('studentId').value;
       const certificate = document.getElementById('certificate');
       const studentName = document.getElementById('studentName');
       const result = document.getElementById('result');
+      const rank = document.getElementById('rank');
+      const topper = document.getElementById('topper');
+      const timestamp = document.getElementById('timestamp');
+      const downloadBtn = document.getElementById('downloadBtn');
+
       if (students[studentId]) {
         studentName.textContent = students[studentId].name;
-        result.textContent = students[studentId].result;
+        result.textContent = `${students[studentId].marks}%`;
+        rank.textContent = `Rank: ${students[studentId].rank || "N/A"}`;
+        timestamp.textContent = `Downloaded on: ${new Date().toLocaleString()}`;
         certificate.style.display = 'block';
+        downloadBtn.style.display = 'block';
+
+        // Find the highest marks
+        let highestMarks = -Infinity;
+        let topperId = '';
+        for (const id in students) {
+          if (students[id].marks > highestMarks) {
+            highestMarks = students[id].marks;
+            topperId = id;
+          }
+        }
+
+        // Check if the current student is the topper
+        if (studentId === topperId) {
+          topper.textContent = "Topper";
+        } else {
+          topper.textContent = "";
+        }
       } else {
         alert('Student ID not found. Please try again.');
       }
+    }
+
+    function downloadCertificate() {
+      const certificate = document.getElementById('certificate');
+      html2canvas(certificate).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'certificate.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
     }
   </script>
 </body>
