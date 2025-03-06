@@ -23,6 +23,8 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
       position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
     }
     h1 {
       font-size: 2.5rem;
@@ -173,44 +175,37 @@
   </div>
   <script>
     const students = {
-      "S-Ramzan-11": { name: "Gulam Rasool Rizvi", marks: 97 },
-      "S-Ramzan-16": { name: "Abdul Latif", marks: 90 },
-      "S-Ramzan-34": { name: "Lal Mohammad", marks: 48 },
-      "S-Ramzan-38": { name: "Rafeeq Ahmad", marks: 75 },
-      "S-Ramzan-47": { name: "Sayed Kamal Ahmad", marks: -1 },
-      "S-Ramzan-42": { name: "Munshiraza", marks: -1 },
-      "S-Ramzan-12": { name: "Ekhlak Ahmad", marks: 79 },
-      "S-Ramzan-32": { name: "Nijamuddin", marks: 83 },
-      "S-Ramzan-19": { name: "Navi Jaan", marks: 99.5 },
-      "S-Ramzan-45": { name: "Habibullah", marks: 59 },
-      "S-Ramzan-13": { name: "Imteyaz Ahmad", marks: 66.5 },
-      "S-Ramzan-35": { name: "Naimuddin Ansari", marks: 85 },
-      "S-Ramzan-05": { name: "Ghulam Rabbani Khan", marks: 34 },
-      "S-Ramzan-23": { name: "Akhatar Ansari", marks: -1 },
-      "S-Ramzan-41": { name: "Yunus", marks: 32 },
-      "S-Ramzan-14": { name: "Faiz Alam", marks: 100 },
-      "S-Ramzan-03": { name: "Saiyad Ahmad", marks: 82 },
-      "S-Ramzan-36": { name: "Zulkanain", marks: -1 },
-      "S-Ramzan-08": { name: "Abdul Nadir", marks: 97.5 },
-      "S-Ramzan-39": { name: "Azizul Shekh", marks: 73.5 },
-      "S-Ramzan-43": { name: "Savid Ali", marks: -1 },
-      "S-Ramzan-15": { name: "Shaarfuddin Ansari", marks: 48.5 },
-      "S-Ramzan-09": { name: "Mohd. Muslim Raini", marks: 61.5 },
-      "S-Ramzan-18": { name: "Farid Alam", marks: 92.5 },
-      "S-Ramzan-29": { name: "Md. Mushtak Ahmed", marks: -1 },
-      "S-Ramzan-44": { name: "Mainudin Julaha", marks: -1 },
-      "S-Ramzan-23": { name: "Mohd shahbaz*", marks: 48.6 },
-      "R-23": { name: "akhtar ansari", marks: 80.5 },
-      "S-Ramzan-17": { name: "Majibullah*", marks: 59 }
+      "S-Ramzan-19": { name: "Mr. Navi Jaan", marks: 19.75, rank: 1 },
+      "S-Ramzan-35": { name: "Mr. Naimuddin Ansari", marks: 19, rank: 2 },
+      "S-Ramzan-32": { name: "Mr. Nijamuddin", marks: 18.75, rank: 3 },
+      "S-Ramzan-11": { name: "Mr. Gulam Rasool Rizvi", marks: 18.5, rank: 4 },
+      "S-Ramzan-14": { name: "Mr. Faiz Alam", marks: 18, rank: 5 },
+      "S-Ramzan-47": { name: "Mr. Sayed Kamal Ahmad", marks: 16.5, rank: 6 },
+      "S-Ramzan-23": { name: "Mr. Akhatar Ansari", marks: 16.25, rank: 7 },
+      "S-Ramzan-03": { name: "Mr. Saiyad Ahmad", marks: 16, rank: 8 },
+      "S-Ramzan-08": { name: "Mr. Abdul Nadir", marks: 16, rank: 8 },
+      "S-Ramzan-12": { name: "Mr. Ekhlak Ahmad", marks: 15.5, rank: 10 },
+      "S-Ramzan-13": { name: "Mr. Imteyaz Ahmad", marks: 15, rank: 11 },
+      "S-Ramzan-38": { name: "Mr. Rafeeq Ahmad", marks: 11.5, rank: 12 },
+      "S-Ramzan-43": { name: "Mr. Savid Ali", marks: 11.5, rank: 12 },
+      "S-Ramzan-18": { name: "Mr. Farid Alam", marks: 10.75, rank: 14 },
+      "S-23": { name: "Mr. *Shehbaz", marks: 10, rank: 15 },
+      "S-Ramzan-16": { name: "Mr. Abdul Latif", marks: 9, rank: 16 },
+      "S-Ramzan-34": { name: "Mr. Lal Mohammad", marks: 8, rank: 17 },
+      "S-Ramzan-39": { name: "Mr. Azizul Shekh", marks: 7.75, rank: 18 },
+      "S-Ramzan-15": { name: "Mr. Shaarfuddin Ansari", marks: 7.25, rank: 19 },
+      "S-Ramzan-36": { name: "Mr. Zulkanain", marks: 6.75, rank: 20 },
+      "S-Ramzan-09": { name: "Mr. Mohd. Muslim Raini", marks: 6.75, rank: 20 },
+      "S-Ramzan-17": { name: "Mr. Habibullah", marks: 6.5, rank: 22 },
+      "S-Ramzan-05": { name: "Mr. Ghulam Rabbani Khan", marks: 6, rank: 23 },
+      "S-Ramzan-46": { name: "Mr. Arif", marks: 5.5, rank: 24 },
+      "S-Ramzan-48": { name: "Mr. *Mujeeb", marks: 5.25, rank: 25 },
+      "S-24": { name: "Mr. *Sajid", marks: 3.75, rank: 26 },
+      "S-Ramzan-42": { name: "Mr. Munshiraza", marks: 3.5, rank: 27 },
+      "S-Ramzan-44": { name: "Mr. Mainudin Julaha", marks: 3.5, rank: 27 },
+      "S-Ramzan-41": { name: "Mr. Yunus", marks: 3, rank: 29 },
+      "S-Ramzan-29": { name: "Mr. Md. Mushtak Ahmed", marks: -1, rank: 30 }
     };
-
-    // Calculate ranks
-    const studentEntries = Object.entries(students);
-    const validStudents = studentEntries.filter(([id, data]) => data.marks !== -1);
-    validStudents.sort((a, b) => b[1].marks - a[1].marks);
-    validStudents.forEach(([id, data], index) => {
-      students[id].rank = index + 1;
-    });
 
     function displayResult() {
       const studentId = document.getElementById('studentId').value;
@@ -224,7 +219,9 @@
 
       if (students[studentId]) {
         studentName.textContent = students[studentId].name;
-        result.textContent = `${students[studentId].marks}%`;
+        // Calculate percentage (marks are out of 20)
+        const percentage = ((students[studentId].marks / 20) * 100).toFixed(2);
+        result.textContent = `${percentage}%`;
         rank.textContent = `Rank: ${students[studentId].rank || "N/A"}`;
         timestamp.textContent = `Downloaded on: ${new Date().toLocaleString()}`;
         certificate.style.display = 'block';
