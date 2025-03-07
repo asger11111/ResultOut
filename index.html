@@ -12,9 +12,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
-      overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
     }
     .container {
       text-align: center;
@@ -22,20 +23,26 @@
       padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
+      width: 100%;
+      max-width: 1200px;
+      overflow-x: auto;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #ffcc00;
     }
     input {
       padding: 0.5rem;
       font-size: 1rem;
       border-radius: 5px;
       margin-bottom: 1rem;
-      width: 200px;
+      width: 90%;
+      max-width: 300px;
     }
     button {
       padding: 0.5rem 1rem;
@@ -49,232 +56,146 @@
     button:hover {
       background: #45a049;
     }
-    .certificate {
-      display: none;
-      margin-top: 2rem;
-      background: white;
-      color: black;
-      padding: 2rem;
-      border-radius: 15px;
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      overflow-x: auto;
+    }
+    .result-table, .result-table th, .result-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: center;
-      position: relative;
-      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-      border: 2px solid #ddd;
     }
-    .certificate::before {
-      content: "Global Spoken English";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 3rem;
-      color: rgba(0, 0, 0, 0.1);
-      pointer-events: none;
+    .result-table th {
+      background-color: #4CAF50;
+      color: white;
     }
-    .highlight {
-      font-size: 2rem;
-      font-weight: bold;
+    .result-table td {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .cumulative-rank {
+      font-size: 20px;
       color: #4CAF50;
-    }
-    .topper {
-      color: red;
       font-weight: bold;
-      animation: openGift 2s ease-in-out;
-    }
-    @keyframes openGift {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-      }
+      text-align: center;
+      margin-top: 1rem;
     }
     .timestamp {
       font-size: 0.8rem;
       color: #555;
       margin-top: 1rem;
     }
-    /* Boomer Bomb Effect */
-    .boomer-bomb {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, #ff0, #f00);
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      animation: boomerBomb 1.5s ease-out;
-    }
-    @keyframes boomerBomb {
-      0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 1;
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
       }
-      50% {
-        transform: translate(-50%, -50%) scale(2);
-        opacity: 0.5;
+      h2 {
+        font-size: 1rem;
       }
-      100% {
-        transform: translate(-50%, -50%) scale(4);
-        opacity: 0;
-      }
-    }
-    /* Flashing Effect */
-    .flash {
-      animation: flash 1s infinite;
-    }
-    @keyframes flash {
-      0%, 100% {
-        background-color: transparent;
-      }
-      50% {
-        background-color: rgba(255, 255, 0, 0.5);
-      }
-    }
-    /* Confetti Effect */
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #ff0;
-      animation: confetti 2s linear infinite;
-    }
-    @keyframes confetti {
-      0% {
-        transform: translateY(0) rotate(0);
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
+      .result-table th, .result-table td {
+        padding: 6px;
+        font-size: 0.9rem;
       }
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>GLOBAL SPOKEN ENGLISH</h1>
-    <input type="text" id="studentId" placeholder="Enter Student ID">
+    <h2>फर्राटेदार अंग्रेजी बोलना सीखें</h2>
+    <input type="text" id="studentId" placeholder="Enter Registration Number">
     <button onclick="displayResult()">View Result</button>
-    <div id="certificate" class="certificate">
-      <h2>Certificate of Achievement</h2>
-      <p>This is to certify that</p>
-      <p id="studentName" class="student-name"></p>
-      <p>your son has successfully completed the test with the following result:</p>
-      <p id="result" class="highlight"></p>
-      <p id="rank"></p>
-      <p id="topper" class="topper"></p>
+    <div id="resultDisplay" style="display: none;">
+      <h3>Result Details</h3>
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Reg. No.</th>
+            <th>Father Name</th>
+            <th>Tense Marks</th>
+            <th>Tense %</th>
+            <th>Tense Rank</th>
+            <th>Word Meaning Marks</th>
+            <th>Word Meaning %</th>
+            <th>Word Meaning Rank</th>
+            <th>Cumulative Marks</th>
+            <th>Cumulative %</th>
+            <th>Cumulative Rank</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody">
+        </tbody>
+      </table>
+      <p id="cumulativeRank" class="cumulative-rank"></p>
       <p id="timestamp" class="timestamp"></p>
     </div>
-    <button id="downloadBtn" style="display: none;" onclick="downloadCertificate()">Download Certificate</button>
   </div>
   <script>
     const students = {
-      "S-Ramzan-19": { name: "Mr. Navi Jaan", marks: 19.75, rank: 1 },
-      "S-Ramzan-35": { name: "Mr. Naimuddin Ansari", marks: 19, rank: 2 },
-      "S-Ramzan-32": { name: "Mr. Nijamuddin", marks: 18.75, rank: 3 },
-      "S-Ramzan-11": { name: "Mr. Gulam Rasool Rizvi", marks: 18.5, rank: 4 },
-      "S-Ramzan-14": { name: "Mr. Faiz Alam", marks: 18, rank: 5 },
-      "S-Ramzan-47": { name: "Mr. Sayed Kamal Ahmad", marks: 16.5, rank: 6 },
-      "S-Ramzan-23": { name: "Mr. Akhatar Ansari", marks: 16.25, rank: 7 },
-      "S-Ramzan-03": { name: "Mr. Saiyad Ahmad", marks: 16, rank: 8 },
-      "S-Ramzan-08": { name: "Mr. Abdul Nadir", marks: 16, rank: 8 },
-      "S-Ramzan-12": { name: "Mr. Ekhlak Ahmad", marks: 15.5, rank: 10 },
-      "S-Ramzan-13": { name: "Mr. Imteyaz Ahmad", marks: 15, rank: 11 },
-      "S-Ramzan-38": { name: "Mr. Rafeeq Ahmad", marks: 11.5, rank: 12 },
-      "S-Ramzan-43": { name: "Mr. Savid Ali", marks: 11.5, rank: 12 },
-      "S-Ramzan-18": { name: "Mr. Farid Alam", marks: 10.75, rank: 14 },
-      "S-23": { name: "Mr. *Shehbaz", marks: 10, rank: 15 },
-      "S-Ramzan-16": { name: "Mr. Abdul Latif", marks: 9, rank: 16 },
-      "S-Ramzan-34": { name: "Mr. Lal Mohammad", marks: 8, rank: 17 },
-      "S-Ramzan-39": { name: "Mr. Azizul Shekh", marks: 7.75, rank: 18 },
-      "S-Ramzan-15": { name: "Mr. Shaarfuddin Ansari", marks: 7.25, rank: 19 },
-      "S-Ramzan-36": { name: "Mr. Zulkanain", marks: 6.75, rank: 20 },
-      "S-Ramzan-09": { name: "Mr. Mohd. Muslim Raini", marks: 6.75, rank: 20 },
-      "S-Ramzan-17": { name: "Mr. Habibullah", marks: 6.5, rank: 22 },
-      "S-Ramzan-05": { name: "Mr. Ghulam Rabbani Khan", marks: 6, rank: 23 },
-      "S-Ramzan-46": { name: "Mr. Arif", marks: 5.5, rank: 24 },
-      "S-Ramzan-48": { name: "Mr. *Mujeeb", marks: 5.25, rank: 25 },
-      "S-24": { name: "Mr. *Sajid", marks: 3.75, rank: 26 },
-      "S-Ramzan-42": { name: "Mr. Munshiraza", marks: 3.5, rank: 27 },
-      "S-Ramzan-44": { name: "Mr. Mainudin Julaha", marks: 3.5, rank: 27 },
-      "S-Ramzan-41": { name: "Mr. Yunus", marks: 3, rank: 29 },
-      "S-Ramzan-29": { name: "Mr. Md. Mushtak Ahmed", marks: -1, rank: 30 }
+      "S-Ramzan-19": { name: "Mr. Navi Jaan", tenseMarks: 19.75, tensePercentage: 98.75, tenseRank: 1, wordMeaningMarks: 19.25, wordMeaningPercentage: 96.25, wordMeaningRank: 2, cumulativeMarks: 39, cumulativePercentage: 97.5, cumulativeRank: 1 },
+      "S-Ramzan-35": { name: "Mr. Naimuddin Ansari", tenseMarks: 19, tensePercentage: 95, tenseRank: 2, wordMeaningMarks: 20, wordMeaningPercentage: 100, wordMeaningRank: 1, cumulativeMarks: 39, cumulativePercentage: 97.5, cumulativeRank: 1 },
+      "S-Ramzan-32": { name: "Mr. Nijamuddin", tenseMarks: 18.75, tensePercentage: 93.75, tenseRank: 3, wordMeaningMarks: 20, wordMeaningPercentage: 100, wordMeaningRank: 1, cumulativeMarks: 38.75, cumulativePercentage: 96.875, cumulativeRank: 3 },
+      "S-Ramzan-11": { name: "Mr. Gulam Rasool Rizvi", tenseMarks: 18.5, tensePercentage: 92.5, tenseRank: 4, wordMeaningMarks: 17.75, wordMeaningPercentage: 88.75, wordMeaningRank: 4, cumulativeMarks: 36.25, cumulativePercentage: 90.625, cumulativeRank: 4 },
+      "S-Ramzan-14": { name: "Mr. Faiz Alam", tenseMarks: 18, tensePercentage: 90, tenseRank: 5, wordMeaningMarks: 19, wordMeaningPercentage: 95, wordMeaningRank: 2, cumulativeMarks: 37, cumulativePercentage: 92.5, cumulativeRank: 5 },
+      "S-Ramzan-47": { name: "Mr. Sayed Kamal Ahmad", tenseMarks: 16.5, tensePercentage: 82.5, tenseRank: 6, wordMeaningMarks: 18.25, wordMeaningPercentage: 91.25, wordMeaningRank: 3, cumulativeMarks: 34.75, cumulativePercentage: 86.875, cumulativeRank: 6 },
+      "S-Ramzan-23": { name: "Mr. Akhatar Ansari", tenseMarks: 16.25, tensePercentage: 81.25, tenseRank: 7, wordMeaningMarks: 7.75, wordMeaningPercentage: 38.75, wordMeaningRank: 15, cumulativeMarks: 24, cumulativePercentage: 60, cumulativeRank: 15 },
+      "S-Ramzan-03": { name: "Mr. Saiyad Ahmad", tenseMarks: 16, tensePercentage: 80, tenseRank: 8, wordMeaningMarks: 7.5, wordMeaningPercentage: 37.5, wordMeaningRank: 16, cumulativeMarks: 23.5, cumulativePercentage: 58.75, cumulativeRank: 16 },
+      "S-Ramzan-08": { name: "Mr. Abdul Nadir", tenseMarks: 16, tensePercentage: 80, tenseRank: 8, wordMeaningMarks: 8.5, wordMeaningPercentage: 42.5, wordMeaningRank: 14, cumulativeMarks: 24.5, cumulativePercentage: 61.25, cumulativeRank: 14 },
+      "S-Ramzan-12": { name: "Mr. Ekhlak Ahmad", tenseMarks: 15.5, tensePercentage: 77.5, tenseRank: 10, wordMeaningMarks: 15.5, wordMeaningPercentage: 77.5, wordMeaningRank: 5, cumulativeMarks: 31, cumulativePercentage: 77.5, cumulativeRank: 10 },
+      "S-Ramzan-13": { name: "Mr. Imteyaz Ahmad", tenseMarks: 15, tensePercentage: 75, tenseRank: 11, wordMeaningMarks: 11, wordMeaningPercentage: 55, wordMeaningRank: 10, cumulativeMarks: 26, cumulativePercentage: 65, cumulativeRank: 11 },
+      "S-Ramzan-38": { name: "Mr. Rafeeq Ahmad", tenseMarks: 11.5, tensePercentage: 57.5, tenseRank: 12, wordMeaningMarks: 9.5, wordMeaningPercentage: 47.5, wordMeaningRank: 12, cumulativeMarks: 21, cumulativePercentage: 52.5, cumulativeRank: 12 },
+      "S-Ramzan-43": { name: "Mr. Savid Ali", tenseMarks: 11.5, tensePercentage: 57.5, tenseRank: 12, wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: 11.5, cumulativePercentage: 28.75, cumulativeRank: 30 },
+      "S-Ramzan-18": { name: "Mr. Farid Alam", tenseMarks: 10.75, tensePercentage: 53.75, tenseRank: 14, wordMeaningMarks: 13, wordMeaningPercentage: 65, wordMeaningRank: 7, cumulativeMarks: 23.75, cumulativePercentage: 59.375, cumulativeRank: 13 },
+      "S-23": { name: "Mr. *Shehbaz", tenseMarks: 10, tensePercentage: 50, tenseRank: 15, wordMeaningMarks: 4.5, wordMeaningPercentage: 22.5, wordMeaningRank: 20, cumulativeMarks: 14.5, cumulativePercentage: 36.25, cumulativeRank: 20 },
+      "S-Ramzan-16": { name: "Mr. Abdul Latif", tenseMarks: 9, tensePercentage: 45, tenseRank: 16, wordMeaningMarks: 12.5, wordMeaningPercentage: 62.5, wordMeaningRank: 8, cumulativeMarks: 21.5, cumulativePercentage: 53.75, cumulativeRank: 16 },
+      "S-Ramzan-34": { name: "Mr. Lal Mohammad", tenseMarks: 8, tensePercentage: 40, tenseRank: 17, wordMeaningMarks: 11, wordMeaningPercentage: 55, wordMeaningRank: 10, cumulativeMarks: 19, cumulativePercentage: 47.5, cumulativeRank: 17 },
+      "S-Ramzan-39": { name: "Mr. Azizul Shekh", tenseMarks: 7.75, tensePercentage: 38.75, tenseRank: 18, wordMeaningMarks: 11.75, wordMeaningPercentage: 58.75, wordMeaningRank: 9, cumulativeMarks: 19.5, cumulativePercentage: 48.75, cumulativeRank: 18 },
+      "S-Ramzan-15": { name: "Mr. Shaarfuddin Ansari", tenseMarks: 7.25, tensePercentage: 36.25, tenseRank: 19, wordMeaningMarks: 0.5, wordMeaningPercentage: 2.5, wordMeaningRank: 25, cumulativeMarks: 7.75, cumulativePercentage: 19.375, cumulativeRank: 25 },
+      "S-Ramzan-36": { name: "Mr. Zulkanain", tenseMarks: 6.75, tensePercentage: 33.75, tenseRank: 20, wordMeaningMarks: 5.75, wordMeaningPercentage: 28.75, wordMeaningRank: 18, cumulativeMarks: 12.5, cumulativePercentage: 31.25, cumulativeRank: 21 },
+      "S-Ramzan-09": { name: "Mr. Mohd. Muslim Raini", tenseMarks: 6.75, tensePercentage: 33.75, tenseRank: 20, wordMeaningMarks: 4, wordMeaningPercentage: 20, wordMeaningRank: 21, cumulativeMarks: 10.75, cumulativePercentage: 26.875, cumulativeRank: 22 },
+      "S-Ramzan-17": { name: "Mr. Habibullah", tenseMarks: 6.5, tensePercentage: 32.5, tenseRank: 22, wordMeaningMarks: 7.25, wordMeaningPercentage: 36.25, wordMeaningRank: 17, cumulativeMarks: 13.75, cumulativePercentage: 34.375, cumulativeRank: 19 },
+      "S-Ramzan-05": { name: "Mr. Ghulam Rabbani Khan", tenseMarks: 6, tensePercentage: 30, tenseRank: 23, wordMeaningMarks: 6.75, wordMeaningPercentage: 33.75, wordMeaningRank: 19, cumulativeMarks: 12.75, cumulativePercentage: 31.875, cumulativeRank: 20 },
+      "S-Ramzan-46": { name: "Mr. Irfan Ahmad", tenseMarks: 5.5, tensePercentage: 27.5, tenseRank: 24, wordMeaningMarks: 1, wordMeaningPercentage: 5, wordMeaningRank: 26, cumulativeMarks: 6.5, cumulativePercentage: 16.25, cumulativeRank: 26 },
+      "S-Ramzan-48": { name: "Mr. *Mujeeb", tenseMarks: 5.25, tensePercentage: 26.25, tenseRank: 25, wordMeaningMarks: 9.5, wordMeaningPercentage: 47.5, wordMeaningRank: 12, cumulativeMarks: 14.75, cumulativePercentage: 36.875, cumulativeRank: 19 },
+      "S-24": { name: "Mr. *Sajid", tenseMarks: 3.75, tensePercentage: 18.75, tenseRank: 26, wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: 3.75, cumulativePercentage: 9.375, cumulativeRank: 30 },
+      "S-Ramzan-42": { name: "Mr. Munshiraza", tenseMarks: 3.5, tensePercentage: 17.5, tenseRank: 27, wordMeaningMarks: 6.5, wordMeaningPercentage: 32.5, wordMeaningRank: 20, cumulativeMarks: 10, cumulativePercentage: 25, cumulativeRank: 23 },
+      "S-Ramzan-44": { name: "Mr. Mainudin Julaha", tenseMarks: 3.5, tensePercentage: 17.5, tenseRank: 27, wordMeaningMarks: 1.75, wordMeaningPercentage: 8.75, wordMeaningRank: 24, cumulativeMarks: 5.25, cumulativePercentage: 13.125, cumulativeRank: 27 },
+      "S-Ramzan-41": { name: "Mr. Yunus", tenseMarks: 3, tensePercentage: 15, tenseRank: 29, wordMeaningMarks: 5.75, wordMeaningPercentage: 28.75, wordMeaningRank: 18, cumulativeMarks: 8.75, cumulativePercentage: 21.875, cumulativeRank: 24 },
+      "S-Ramzan-29": { name: "Mr. Md. Mushtak Ahmed", tenseMarks: "Absent", tensePercentage: "Absent", tenseRank: "Absent", wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: "Absent", cumulativePercentage: "Absent", cumulativeRank: "Absent" }
     };
 
     function displayResult() {
       const studentId = document.getElementById('studentId').value;
-      const certificate = document.getElementById('certificate');
-      const studentName = document.getElementById('studentName');
-      const result = document.getElementById('result');
-      const rank = document.getElementById('rank');
-      const topper = document.getElementById('topper');
+      const resultDisplay = document.getElementById('resultDisplay');
+      const resultBody = document.getElementById('resultBody');
+      const cumulativeRank = document.getElementById('cumulativeRank');
       const timestamp = document.getElementById('timestamp');
-      const downloadBtn = document.getElementById('downloadBtn');
 
       if (students[studentId]) {
-        studentName.textContent = students[studentId].name;
-        // Calculate percentage (marks are out of 20)
-        const percentage = ((students[studentId].marks / 20) * 100).toFixed(2);
-        result.textContent = `${percentage}%`;
-        rank.textContent = `Rank: ${students[studentId].rank || "N/A"}`;
+        resultBody.innerHTML = '';
+        const student = students[studentId];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${studentId}</td>
+          <td>${student.name}</td>
+          <td>${student.tenseMarks}</td>
+          <td>${student.tensePercentage}</td>
+          <td>${student.tenseRank}</td>
+          <td>${student.wordMeaningMarks}</td>
+          <td>${student.wordMeaningPercentage}</td>
+          <td>${student.wordMeaningRank}</td>
+          <td>${student.cumulativeMarks}</td>
+          <td>${student.cumulativePercentage}</td>
+          <td>${student.cumulativeRank}</td>
+        `;
+        resultBody.appendChild(row);
+        cumulativeRank.textContent = `Cumulative Rank: ${student.cumulativeRank}`;
         timestamp.textContent = `Downloaded on: ${new Date().toLocaleString()}`;
-        certificate.style.display = 'block';
-        downloadBtn.style.display = 'block';
-
-        // Find the highest marks
-        let highestMarks = -Infinity;
-        let topperId = '';
-        for (const id in students) {
-          if (students[id].marks > highestMarks) {
-            highestMarks = students[id].marks;
-            topperId = id;
-          }
-        }
-
-        // Check if the current student is the topper
-        if (studentId === topperId) {
-          topper.textContent = "Topper";
-          // Add boomer bomb effect
-          const boomerBomb = document.createElement('div');
-          boomerBomb.className = 'boomer-bomb';
-          document.body.appendChild(boomerBomb);
-          setTimeout(() => boomerBomb.remove(), 1500);
-
-          // Add flashing effect
-          document.body.classList.add('flash');
-
-          // Add confetti effect
-          for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = `${Math.random() * 100}vw`;
-            confetti.style.animationDelay = `${Math.random()}s`;
-            document.body.appendChild(confetti);
-            setTimeout(() => confetti.remove(), 2000);
-          }
-        } else {
-          topper.textContent = "";
-          document.body.classList.remove('flash');
-        }
+        resultDisplay.style.display = 'block';
       } else {
-        alert('Student ID not found. Please try again.');
+        alert('Registration Number not found. Please try again.');
       }
-    }
-
-    function downloadCertificate() {
-      const certificate = document.getElementById('certificate');
-      html2canvas(certificate).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'certificate.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      });
     }
   </script>
 </body>
