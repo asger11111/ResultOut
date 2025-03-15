@@ -24,15 +24,15 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
       width: 100%;
-      max-width: 1200px;
+      max-width: 500px;
       overflow-x: auto;
     }
     h1 {
-      font-size: 2rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
     h2 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       margin-bottom: 1rem;
       color: #ffcc00;
     }
@@ -60,11 +60,11 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      overflow-x: auto;
+      font-size: 0.9rem;
     }
     .result-table, .result-table th, .result-table td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 6px;
       text-align: center;
     }
     .result-table th {
@@ -75,7 +75,7 @@
       background-color: rgba(255, 255, 255, 0.1);
     }
     .cumulative-rank {
-      font-size: 20px;
+      font-size: 1rem;
       color: #4CAF50;
       font-weight: bold;
       text-align: center;
@@ -86,17 +86,10 @@
       color: #555;
       margin-top: 1rem;
     }
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-      h2 {
-        font-size: 1rem;
-      }
-      .result-table th, .result-table td {
-        padding: 6px;
-        font-size: 0.9rem;
-      }
+    .topper {
+      font-size: 1rem;
+      color: #ffcc00;
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -112,16 +105,14 @@
         <thead>
           <tr>
             <th>Reg. No.</th>
-            <th>Father Name</th>
-            <th>Tense Marks</th>
-            <th>Tense %</th>
-            <th>Tense Rank</th>
-            <th>Word Meaning Marks</th>
-            <th>Word Meaning %</th>
-            <th>Word Meaning Rank</th>
-            <th>Cumulative Marks</th>
-            <th>Cumulative %</th>
-            <th>Cumulative Rank</th>
+            <th>Father's Name</th>
+            <th>Tense</th>
+            <th>Vocab</th>
+            <th>Final</th>
+            <th>Total</th>
+            <th>Rank</th>
+            <th>Improvement (%)</th>
+            <th>Overall (%)</th>
           </tr>
         </thead>
         <tbody id="resultBody">
@@ -129,41 +120,66 @@
       </table>
       <p id="cumulativeRank" class="cumulative-rank"></p>
       <p id="timestamp" class="timestamp"></p>
+      <p id="topperInfo" class="topper"></p>
     </div>
   </div>
   <script>
     const students = {
-      "S-Ramzan-19": { name: "Mr. Navi Jaan", tenseMarks: 19.75, tensePercentage: 98.75, tenseRank: 1, wordMeaningMarks: 19.25, wordMeaningPercentage: 96.25, wordMeaningRank: 2, cumulativeMarks: 39, cumulativePercentage: 97.5, cumulativeRank: 1 },
-      "S-Ramzan-35": { name: "Mr. Naimuddin Ansari", tenseMarks: 19, tensePercentage: 95, tenseRank: 2, wordMeaningMarks: 20, wordMeaningPercentage: 100, wordMeaningRank: 1, cumulativeMarks: 39, cumulativePercentage: 97.5, cumulativeRank: 1 },
-      "S-Ramzan-32": { name: "Mr. Nijamuddin", tenseMarks: 18.75, tensePercentage: 93.75, tenseRank: 3, wordMeaningMarks: 20, wordMeaningPercentage: 100, wordMeaningRank: 1, cumulativeMarks: 38.75, cumulativePercentage: 96.875, cumulativeRank: 3 },
-      "S-Ramzan-11": { name: "Mr. Gulam Rasool Rizvi", tenseMarks: 18.5, tensePercentage: 92.5, tenseRank: 4, wordMeaningMarks: 17.75, wordMeaningPercentage: 88.75, wordMeaningRank: 4, cumulativeMarks: 36.25, cumulativePercentage: 90.625, cumulativeRank: 4 },
-      "S-Ramzan-14": { name: "Mr. Faiz Alam", tenseMarks: 18, tensePercentage: 90, tenseRank: 5, wordMeaningMarks: 19, wordMeaningPercentage: 95, wordMeaningRank: 2, cumulativeMarks: 37, cumulativePercentage: 92.5, cumulativeRank: 5 },
-      "S-Ramzan-47": { name: "Mr. Sayed Kamal Ahmad", tenseMarks: 16.5, tensePercentage: 82.5, tenseRank: 6, wordMeaningMarks: 18.25, wordMeaningPercentage: 91.25, wordMeaningRank: 3, cumulativeMarks: 34.75, cumulativePercentage: 86.875, cumulativeRank: 6 },
-      "S-Ramzan-23": { name: "Mr. Akhatar Ansari", tenseMarks: 16.25, tensePercentage: 81.25, tenseRank: 7, wordMeaningMarks: 7.75, wordMeaningPercentage: 38.75, wordMeaningRank: 15, cumulativeMarks: 24, cumulativePercentage: 60, cumulativeRank: 15 },
-      "S-Ramzan-03": { name: "Mr. Saiyad Ahmad", tenseMarks: 16, tensePercentage: 80, tenseRank: 8, wordMeaningMarks: 7.5, wordMeaningPercentage: 37.5, wordMeaningRank: 16, cumulativeMarks: 23.5, cumulativePercentage: 58.75, cumulativeRank: 16 },
-      "S-Ramzan-08": { name: "Mr. Abdul Nadir", tenseMarks: 16, tensePercentage: 80, tenseRank: 8, wordMeaningMarks: 8.5, wordMeaningPercentage: 42.5, wordMeaningRank: 14, cumulativeMarks: 24.5, cumulativePercentage: 61.25, cumulativeRank: 14 },
-      "S-Ramzan-12": { name: "Mr. Ekhlak Ahmad", tenseMarks: 15.5, tensePercentage: 77.5, tenseRank: 10, wordMeaningMarks: 15.5, wordMeaningPercentage: 77.5, wordMeaningRank: 5, cumulativeMarks: 31, cumulativePercentage: 77.5, cumulativeRank: 10 },
-      "S-Ramzan-13": { name: "Mr. Imteyaz Ahmad", tenseMarks: 15, tensePercentage: 75, tenseRank: 11, wordMeaningMarks: 11, wordMeaningPercentage: 55, wordMeaningRank: 10, cumulativeMarks: 26, cumulativePercentage: 65, cumulativeRank: 11 },
-      "S-Ramzan-38": { name: "Mr. Rafeeq Ahmad", tenseMarks: 11.5, tensePercentage: 57.5, tenseRank: 12, wordMeaningMarks: 9.5, wordMeaningPercentage: 47.5, wordMeaningRank: 12, cumulativeMarks: 21, cumulativePercentage: 52.5, cumulativeRank: 12 },
-      "S-Ramzan-43": { name: "Mr. Savid Ali", tenseMarks: 11.5, tensePercentage: 57.5, tenseRank: 12, wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: 11.5, cumulativePercentage: 28.75, cumulativeRank: 30 },
-      "S-Ramzan-18": { name: "Mr. Farid Alam", tenseMarks: 10.75, tensePercentage: 53.75, tenseRank: 14, wordMeaningMarks: 13, wordMeaningPercentage: 65, wordMeaningRank: 7, cumulativeMarks: 23.75, cumulativePercentage: 59.375, cumulativeRank: 13 },
-      "S-23": { name: "Mr. *Shehbaz", tenseMarks: 10, tensePercentage: 50, tenseRank: 15, wordMeaningMarks: 4.5, wordMeaningPercentage: 22.5, wordMeaningRank: 20, cumulativeMarks: 14.5, cumulativePercentage: 36.25, cumulativeRank: 20 },
-      "S-Ramzan-16": { name: "Mr. Abdul Latif", tenseMarks: 9, tensePercentage: 45, tenseRank: 16, wordMeaningMarks: 12.5, wordMeaningPercentage: 62.5, wordMeaningRank: 8, cumulativeMarks: 21.5, cumulativePercentage: 53.75, cumulativeRank: 16 },
-      "S-Ramzan-34": { name: "Mr. Lal Mohammad", tenseMarks: 8, tensePercentage: 40, tenseRank: 17, wordMeaningMarks: 11, wordMeaningPercentage: 55, wordMeaningRank: 10, cumulativeMarks: 19, cumulativePercentage: 47.5, cumulativeRank: 17 },
-      "S-Ramzan-39": { name: "Mr. Azizul Shekh", tenseMarks: 7.75, tensePercentage: 38.75, tenseRank: 18, wordMeaningMarks: 11.75, wordMeaningPercentage: 58.75, wordMeaningRank: 9, cumulativeMarks: 19.5, cumulativePercentage: 48.75, cumulativeRank: 18 },
-      "S-Ramzan-15": { name: "Mr. Shaarfuddin Ansari", tenseMarks: 7.25, tensePercentage: 36.25, tenseRank: 19, wordMeaningMarks: 0.5, wordMeaningPercentage: 2.5, wordMeaningRank: 25, cumulativeMarks: 7.75, cumulativePercentage: 19.375, cumulativeRank: 25 },
-      "S-Ramzan-36": { name: "Mr. Zulkanain", tenseMarks: 6.75, tensePercentage: 33.75, tenseRank: 20, wordMeaningMarks: 5.75, wordMeaningPercentage: 28.75, wordMeaningRank: 18, cumulativeMarks: 12.5, cumulativePercentage: 31.25, cumulativeRank: 21 },
-      "S-Ramzan-09": { name: "Mr. Mohd. Muslim Raini", tenseMarks: 6.75, tensePercentage: 33.75, tenseRank: 20, wordMeaningMarks: 4, wordMeaningPercentage: 20, wordMeaningRank: 21, cumulativeMarks: 10.75, cumulativePercentage: 26.875, cumulativeRank: 22 },
-      "S-Ramzan-17": { name: "Mr. Habibullah", tenseMarks: 6.5, tensePercentage: 32.5, tenseRank: 22, wordMeaningMarks: 7.25, wordMeaningPercentage: 36.25, wordMeaningRank: 17, cumulativeMarks: 13.75, cumulativePercentage: 34.375, cumulativeRank: 19 },
-      "S-Ramzan-05": { name: "Mr. Ghulam Rabbani Khan", tenseMarks: 6, tensePercentage: 30, tenseRank: 23, wordMeaningMarks: 6.75, wordMeaningPercentage: 33.75, wordMeaningRank: 19, cumulativeMarks: 12.75, cumulativePercentage: 31.875, cumulativeRank: 20 },
-      "S-Ramzan-46": { name: "Mr. Irfan Ahmad", tenseMarks: 5.5, tensePercentage: 27.5, tenseRank: 24, wordMeaningMarks: 1, wordMeaningPercentage: 5, wordMeaningRank: 26, cumulativeMarks: 6.5, cumulativePercentage: 16.25, cumulativeRank: 26 },
-      "S-Ramzan-48": { name: "Mr. Muhammad mahboob", tenseMarks: 5.25, tensePercentage: 26.25, tenseRank: 25, wordMeaningMarks: 9.5, wordMeaningPercentage: 47.5, wordMeaningRank: 12, cumulativeMarks: 14.75, cumulativePercentage: 36.875, cumulativeRank: 19 },
-      "S-24": { name: "Mr. *Sajid", tenseMarks: 3.75, tensePercentage: 18.75, tenseRank: 26, wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: 3.75, cumulativePercentage: 9.375, cumulativeRank: 30 },
-      "S-Ramzan-42": { name: "Mr. Munshiraza", tenseMarks: 3.5, tensePercentage: 17.5, tenseRank: 27, wordMeaningMarks: 6.5, wordMeaningPercentage: 32.5, wordMeaningRank: 20, cumulativeMarks: 10, cumulativePercentage: 25, cumulativeRank: 23 },
-      "S-Ramzan-44": { name: "Mr. Mainudin Julaha", tenseMarks: 3.5, tensePercentage: 17.5, tenseRank: 27, wordMeaningMarks: 1.75, wordMeaningPercentage: 8.75, wordMeaningRank: 24, cumulativeMarks: 5.25, cumulativePercentage: 13.125, cumulativeRank: 27 },
-      "S-Ramzan-41": { name: "Mr. Yunus", tenseMarks: 3, tensePercentage: 15, tenseRank: 29, wordMeaningMarks: 5.75, wordMeaningPercentage: 28.75, wordMeaningRank: 18, cumulativeMarks: 8.75, cumulativePercentage: 21.875, cumulativeRank: 24 },
-      "S-Ramzan-29": { name: "Mr. Md. Mushtak Ahmed", tenseMarks: "Absent", tensePercentage: "Absent", tenseRank: "Absent", wordMeaningMarks: "Absent", wordMeaningPercentage: "Absent", wordMeaningRank: "Absent", cumulativeMarks: "Absent", cumulativePercentage: "Absent", cumulativeRank: "Absent" }
+      "S-Ramzan-35": { fatherName: "Mr. Naimuddin Ansari", tenseScore: 19, vocabularyScore: 20, finalTestScore: 54 },
+      "S-Ramzan-14": { fatherName: "Mr. Faiz Alam", tenseScore: 18, vocabularyScore: 19, finalTestScore: 59.5 },
+      "S-Ramzan-19": { fatherName: "Mr. Navi Jaan", tenseScore: 19.75, vocabularyScore: 19.25, finalTestScore: 52 },
+      "S-Ramzan-32": { fatherName: "Mr. Nijamuddin", tenseScore: 18.75, vocabularyScore: 20, finalTestScore: 45 },
+      "S-Ramzan-11": { fatherName: "Mr. Gulam Rasool Rizvi", tenseScore: 18.5, vocabularyScore: 17.75, finalTestScore: 50 },
+      "S-Ramzan-47": { fatherName: "Mr. Sayed Kamal Ahmad", tenseScore: 16.5, vocabularyScore: 18.25, finalTestScore: 48 },
+      "S-Ramzan-16": { fatherName: "Mr. Abdul Latif", tenseScore: 9, vocabularyScore: 12.5, finalTestScore: 47 },
+      "S-Ramzan-08": { fatherName: "Mr. Abdul Nadir", tenseScore: 16, vocabularyScore: 8.5, finalTestScore: 47.75 },
+      "S-Ramzan-23": { fatherName: "Mr. Akhatar Ansari", tenseScore: 16.25, vocabularyScore: 7.75, finalTestScore: 39.25 },
+      "S-Ramzan-03": { fatherName: "Mr. Saiyad Ahmad", tenseScore: 16, vocabularyScore: 7.5, finalTestScore: 39 },
+      "S-Ramzan-38": { fatherName: "Mr. Rafeeq Ahmad", tenseScore: 11.5, vocabularyScore: 9.5, finalTestScore: 33.3 },
+      "S-Ramzan-18": { fatherName: "Mr. Farid Alam", tenseScore: 10.75, vocabularyScore: 13, finalTestScore: 33 },
+      "S-Ramzan-13": { fatherName: "Mr. Imteyaz Ahmad", tenseScore: 15, vocabularyScore: 11, finalTestScore: 14.5 },
+      "S-Ramzan-39": { fatherName: "Mr. Azizul Shekh", tenseScore: 7.75, vocabularyScore: 11.75, finalTestScore: 29.25 },
+      "S-Ramzan-17": { fatherName: "Mr. Habibullah", tenseScore: 6.5, vocabularyScore: 7.25, finalTestScore: 20.25 },
+      "S-Ramzan-36": { fatherName: "Mr. Zulkanain", tenseScore: 6.75, vocabularyScore: 5.75, finalTestScore: 22 },
+      "S-Ramzan-09": { fatherName: "Mr. Mohd. Muslim Raini", tenseScore: 6.75, vocabularyScore: 4, finalTestScore: 7 },
+      "S-Ramzan-05": { fatherName: "Mr. Ghulam Rabbani Khan", tenseScore: 6, vocabularyScore: 6.75, finalTestScore: 2.25 },
+      "S-Ramzan-48": { fatherName: "Mr. Mujeeb", tenseScore: 5.25, vocabularyScore: 9.5, finalTestScore: 8.5 },
+      "S-Ramzan-42": { fatherName: "Mr. Munshiraza", tenseScore: 3.5, vocabularyScore: 6.5, finalTestScore: 7 },
+      "S-Ramzan-41": { fatherName: "Mr. Yunus", tenseScore: 3, vocabularyScore: 5.75, finalTestScore: 11.75 },
+      "S-Ramzan-44": { fatherName: "Mr. Mainudin Julaha", tenseScore: 3.5, vocabularyScore: 1.75, finalTestScore: 0 },
+      "S-Ramzan-46": { fatherName: "Mr. Irfan Ahmad", tenseScore: 5.5, vocabularyScore: 1, finalTestScore: 0 },
+      "S-Ramzan-15": { fatherName: "Mr. Shaarfuddin Ansari", tenseScore: 7.25, vocabularyScore: 0.5, finalTestScore: 7.5 },
+      "S-Ramzan-34": { fatherName: "Mr. Lal Mohammad", tenseScore: 8, vocabularyScore: 11, finalTestScore: 9.25 },
+      "S-23": { fatherName: "Mr. Shehbaz", tenseScore: 10, vocabularyScore: 4.5, finalTestScore: 9.25 },
+      "S-24": { fatherName: "Mr. Sajid", tenseScore: 3.75, vocabularyScore: 0, finalTestScore: 4.5 },
+      "S-Ramzan-43": { fatherName: "Mr. Savid Ali", tenseScore: 11.5, vocabularyScore: 0, finalTestScore: 0 },
+      "S-Ramzan-12": { fatherName: "Mr. Ekhlak Ahmad", tenseScore: 15.5, vocabularyScore: 15.5, finalTestScore: 0 },
+      "S-Ramzan-29": { fatherName: "Mr. Md. Mushtak Ahmed", tenseScore: 0, vocabularyScore: 0, finalTestScore: 0 }
     };
+
+    // Calculate total marks, improvement percentage, overall percentage, and rank students
+    const studentsWithTotal = Object.keys(students).map(regNo => {
+      const student = students[regNo];
+      const totalMarks = student.tenseScore + student.vocabularyScore + student.finalTestScore;
+      const improvementPercentage = ((student.finalTestScore - (student.vocabularyScore * 3)) / 60) * 100;
+      const overallPercentage = (totalMarks / 100) * 100; // Total marks are out of 100
+      return { ...student, regNo, totalMarks, improvementPercentage, overallPercentage };
+    });
+
+    // Sort students by total marks in descending order
+    studentsWithTotal.sort((a, b) => b.totalMarks - a.totalMarks);
+
+    // Assign ranks (handle ties)
+    let rank = 1;
+    for (let i = 0; i < studentsWithTotal.length; i++) {
+      if (i > 0 && studentsWithTotal[i].totalMarks < studentsWithTotal[i - 1].totalMarks) {
+        rank = i + 1;
+      }
+      studentsWithTotal[i].rank = rank;
+    }
+
+    // Top 3 toppers
+    const toppers = studentsWithTotal.slice(0, 3);
 
     function displayResult() {
       const studentId = document.getElementById('studentId').value;
@@ -171,27 +187,36 @@
       const resultBody = document.getElementById('resultBody');
       const cumulativeRank = document.getElementById('cumulativeRank');
       const timestamp = document.getElementById('timestamp');
+      const topperInfo = document.getElementById('topperInfo');
 
-      if (students[studentId]) {
+      const student = studentsWithTotal.find(s => s.regNo === studentId);
+
+      if (student) {
         resultBody.innerHTML = '';
-        const student = students[studentId];
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${studentId}</td>
-          <td>${student.name}</td>
-          <td>${student.tenseMarks}</td>
-          <td>${student.tensePercentage}</td>
-          <td>${student.tenseRank}</td>
-          <td>${student.wordMeaningMarks}</td>
-          <td>${student.wordMeaningPercentage}</td>
-          <td>${student.wordMeaningRank}</td>
-          <td>${student.cumulativeMarks}</td>
-          <td>${student.cumulativePercentage}</td>
-          <td>${student.cumulativeRank}</td>
+          <td>${student.regNo}</td>
+          <td>${student.fatherName}</td>
+          <td>${student.tenseScore}</td>
+          <td>${student.vocabularyScore}</td>
+          <td>${student.finalTestScore}</td>
+          <td>${student.totalMarks}</td>
+          <td>${student.rank}</td>
+          <td>${student.improvementPercentage.toFixed(2)}</td>
+          <td>${student.overallPercentage.toFixed(2)}</td>
         `;
         resultBody.appendChild(row);
-        cumulativeRank.textContent = `Cumulative Rank: ${student.cumulativeRank}`;
+        cumulativeRank.textContent = `Rank: ${student.rank}`;
         timestamp.textContent = `Downloaded on: ${new Date().toLocaleString()}`;
+
+        // Display toppers
+        topperInfo.innerHTML = `
+          <strong>Toppers:</strong><br>
+          1. ${toppers[0].fatherName} (Reg. No. ${toppers[0].regNo}) - ${toppers[0].totalMarks} Marks<br>
+          2. ${toppers[1].fatherName} (Reg. No. ${toppers[1].regNo}) - ${toppers[1].totalMarks} Marks<br>
+          3. ${toppers[2].fatherName} (Reg. No. ${toppers[2].regNo}) - ${toppers[2].totalMarks} Marks
+        `;
+
         resultDisplay.style.display = 'block';
       } else {
         alert('Registration Number not found. Please try again.');
